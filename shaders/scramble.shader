@@ -96,15 +96,18 @@ float4 mainImage(VertData v_in) : TARGET
     float line_id = floor(ypx);
     float roll = elapsed_time * roll_speed;
 
-    float wave = sin(band_id * 0.37 + roll);
-    float hop = hash11(band_id * 0.17 + floor(roll * 3.0)) - 0.5;
-    float tear = step(0.78, hash11(band_id * 1.9 + floor(roll * 0.7)));
-    float shift = (wave * 0.65 + hop + tear * hop * 2.2) * slide * strength;
+    // Each band has its own constant speed, so the strip glides instead of
+    // holding still and then jumping to a new offset.
+    float raw = hash11(band_id * 0.73) - 0.5;
+    float band_dir = raw >= 0.0 ? 1.0 : -1.0;
+    float band_speed = band_dir * (abs(raw) * 2.4 + 1.1);
+    float wander = sin(roll * 0.65 + band_id * 0.47);
+    float shift = (band_speed * roll + wander * 0.55) * slide * strength;
 
     float2 suv;
-    suv.x = uv.x + shift + (hash11(line_id + floor(roll * 12.0)) - 0.5) * jitter * strength;
+    suv.x = uv.x + shift + sin(line_id * 0.85 + roll * 14.0) * jitter * strength;
     suv.x = suv.x - floor(suv.x);
-    suv.y = clamp(uv.y + (hash11(line_id * 2.3 + roll) - 0.5) * jitter * strength * 0.35, 0.0, 1.0);
+    suv.y = clamp(uv.y + sin(line_id * 1.7 + roll * 11.0) * jitter * strength * 0.35, 0.0, 1.0);
 
     float4 sample = image.Sample(textureSampler, suv);
     float split = fringe * strength * uv_pixel_interval.x;

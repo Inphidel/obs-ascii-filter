@@ -39,7 +39,7 @@ The camera's own exposure and white balance are on the source properties, not on
 ## Scramble
 
 - **Band height** is how tall each torn strip is.
-- **Slide** is how far a strip moves sideways. The picture wraps, the way a set with a bad sync used to.
+- **Slide** is how fast a strip travels sideways. The picture wraps, the way a set with a bad sync used to.
 - **Roll** moves the pattern. **Line jitter** shakes single rows.
 - **Snow** and **Color split** are the noisy cable signal.
 - **Search bar** is the dark band that crawls while the set hunts for a lock.
